@@ -7,6 +7,10 @@
     "phantomjs": "^2.1.7"
   },
   "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "i": "^0.3.6",
     "jasmine": "^3.5.0",
     "jasmine-console-reporter": "^3.1.0",
     "prettier": "^1.18.2"
