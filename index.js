@@ -1,3 +1,4 @@
+
 class SeaCreature {
   constructor(x, y, world, color) {
     this.x = x;
