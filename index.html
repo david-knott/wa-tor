@@ -1,0 +1,54 @@
+<html>
+    <head></head>
+    <body>
+<div id="canvas"><br /></div>
+Births Sharks:<div id="birthSharks"><br /></div>
+Births Fishes:<div id="birthFishes"><br /></div>
+Death Shark:<div id="deathSharks"><br /></div>
+DeathFishes:<div id="deathFishes"><br /></div>
+Current Shark Population:<div id="sharks"><br /></div>
+Current Fish Population:<div id="fishes"><br /></div>
+<div>
+<label>Shark Energy</label>
+<input id="sharkEnergy" onchange="javascript:world.sharkEnergy=this.value" type="number" />
+
+<label>Shark Repoduce Rate</label>
+<input id="sharkRepoRate" onchange="javascript:world.sharkRepoRate=this.value"  type="number" />
+
+<label>Total Number of Sharks</label>
+<input id="sharks" onchange="javascript:world.sharks=this.value;interval.restart();"  type="number" />
+
+<label>Total Number of Fishes</label>
+<input id="fishes" onchange="javascript:world.fishes=this.value;interval.restart();"  type="number" />
+
+<label>Fish Repoduce Rate</label>
+<input id="fishRepoRate" onchange="javascript:world.fishRepoRate=this.value"  type="number" />
+
+<label>World Max X</label>
+<input id="maxX" onchange="javascript:world.maxX=this.value;"  type="number" />
+
+<label>World Max Y</label>
+<input id="maxY" onchange="javascript:world.maxY=this.value" type="number" />
+
+<label>Framerate</label>
+<input id="frameRate" onchange="javascript:world.frameRate=this.value"  type="number" />
+
+
+
+<script src="index.js"></script>
+
+<script>
+document.getElementById('sharkEnergy').value = world.sharkEnergy;
+document.getElementById('sharkRepoRate').value = world.sharkRepoRate;
+document.getElementById('fishRepoRate').value = world.fishRepoRate;
+document.getElementById('fishes').value = world.fishes;
+document.getElementById('sharks').value = world.sharks;
+document.getElementById('maxX').value = world.maxX;
+document.getElementById('maxY').value = world.maxY;
+document.getElementById('frameRate').value = world.frameRate;
+</script>
+
+
+    </body>
+</html>
+
