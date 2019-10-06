@@ -1,3 +1,5 @@
+const Shark = require('./shark');
+const Fish = require('./fish');
 class World {
     constructor() {
         this.dead = [];
@@ -38,7 +40,7 @@ class World {
                 this.inner[i][j] = null;
             }
         }
-        for (var i = 0; i < this.fishes; i++) {
+        for (let i = 0; i < this.fishes; i++) {
             let x = Math.floor(Math.random() * this.maxX);
             let y = Math.floor(Math.random() * this.maxY);
             let f = this.createFishAt(x, y);
@@ -53,7 +55,7 @@ class World {
             }
         }
 
-        for (var i = 0; i < this.sharks; i++) {
+        for (let i = 0; i < this.sharks; i++) {
             let x = Math.floor(Math.random() * this.maxX);
             let y = Math.floor(Math.random() * this.maxY);
             let f = this.createSharkAt(x, y);
@@ -120,7 +122,7 @@ class World {
                 },
                 this.creatures[i]
             );
-            //process the dead and born stacks
+			//process the dead and born stacks
             while (this.dead.length > 0) {
                 let creature = this.dead.pop();
                 this.remove(creature);

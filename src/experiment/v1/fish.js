@@ -5,6 +5,10 @@ class Fish extends SeaCreature {
         super(x, y, world, 'green');
     }
 
+    getColor(){
+        return "green";
+    }
+
     getReproduceRate() {
         return this.world.fishRepoRate;
     }
@@ -14,6 +18,7 @@ class Fish extends SeaCreature {
     }
 
     tryReproduce() {
+        var me = this;
         if (me.getAndIncrementMoveCount() > me.getReproduceRate()) {
             this.world.born.push(this.world.createFishAt(this.x, this.y));
             this.world.fishes++;

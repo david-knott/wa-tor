@@ -1,9 +1,27 @@
 const SeaCreature = require('./sea-creature');
 
 class Shark extends SeaCreature {
+
     constructor(x, y, world) {
         super(x, y, world, 'red');
         this.energy = this.world.sharkEnergy;
+    }
+
+    getColor(){
+        let c = [
+'#072f5f',
+'#1261a0',
+'#3895d3',
+'#58cced'
+        ];
+        let i = 3;
+        if(this.energy < 10)
+            i = 0;
+         if(this.energy < 40)
+            i = 1;
+          if(this.energy < 60)
+            i = 2;
+        return c[i];
     }
 
     getReproduceRate() {
@@ -33,13 +51,13 @@ class Shark extends SeaCreature {
     eat(fish) {
         this.world.dead.push(fish);
         this.world.fishes--;
-        this.energy += 15;
+        this.energy += 5;
     }
 
     tryReproduce() {
         var me = this;
         if (me.getAndIncrementMoveCount() > me.getReproduceRate()) {
-            this.world.born.push(this.world.createSharkAt(next.x, next.y));
+            this.world.born.push(this.world.createSharkAt(this.x, this.y));
             this.world.sharks++;
             me.moveCount = 0;
         }
