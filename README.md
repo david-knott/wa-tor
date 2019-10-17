@@ -1,2 +1,2 @@
 # wa-tor
-Cellular automata demonstration using sharks and fishes  
+Javascript implementation of sharks and fishes cellular automata program  
