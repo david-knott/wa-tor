@@ -1,11 +1,13 @@
+import './experiment/v1/_custom.scss';
+import 'bootstrap';
 const World = require('./experiment/v1/world');
 var world = new World();
 window.world = world;
-world.maxX = 100;
-world.maxY = 50;
-world.sharks = 10;
-world.frameRate = 10;
-world.fishes = 1000;
+world.maxX = 25;
+world.maxY = 20;
+world.sharks = 1;
+world.frameRate = 1;
+world.fishes = 400;
 
 function createCanvas(parent, width, height) {
     var canvas = {};

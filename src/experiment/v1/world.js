@@ -6,10 +6,10 @@ class World {
         this.born = [];
         this.maxX = 1;
         this.maxY = 1;
-        this.scale = 10;
-        this.sharkRepoRate = 20;
-        this.fishRepoRate = 20;
-        this.sharkEnergy = 10;
+        this.scale = 20;
+        this.sharkRepoRate = 15;
+        this.fishRepoRate = 10;
+        this.sharkEnergy = 6;
         this.fishes = 0;
         this.sharks = 0;
         this.frameRate = 1;

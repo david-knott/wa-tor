@@ -7,12 +7,18 @@ class Shark extends SeaCreature {
     }
 
     getColor() {
-        let c = ['#072f5f', '#1261a0', '#3895d3', '#58cced'];
-        let i = 3;
-        if (this.energy < 10) i = 0;
-        if (this.energy < 40) i = 1;
-        if (this.energy < 60) i = 2;
-        return c[i];
+        var rgbToHex = function(rgb) {
+            var hex = Number(rgb).toString(16);
+            if (hex.length < 2) {
+                hex = '0' + hex;
+            }
+            return hex;
+        };
+        var blue = 255 - Math.floor(this.energy % 256);
+        var green = 255 - Math.floor(this.energy / 256 % 256);
+        var red = 255 - Math.floor(this.energy / 256 / 256 % 256);
+        var s = '#' + rgbToHex(red) + rgbToHex(green) + rgbToHex(blue);
+        return s;
     }
 
     getReproduceRate() {
@@ -25,7 +31,6 @@ class Shark extends SeaCreature {
 
     getPotentialMoves() {
         var me = this;
-
         var adjacentSpaces = this.getAdjacentSpaces();
         var emptySpaces = adjacentSpaces.filter(as => {
             return me.world.get(as) == null;
@@ -55,7 +60,7 @@ class Shark extends SeaCreature {
     }
 
     move() {
-        if (this.energy < 0) {
+        if (this.energy <= 0) {
             this.world.dead.push(this);
             this.world.sharks--;
             return;
