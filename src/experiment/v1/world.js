@@ -4,15 +4,15 @@ class World {
     constructor() {
         this.dead = [];
         this.born = [];
-        this.maxX = 1;
-        this.maxY = 1;
-        this.scale = 20;
+        this.maxX = 0;
+        this.maxY = 0;
+        this.scale = 10;
         this.sharkRepoRate = 15;
-        this.fishRepoRate = 10;
-        this.sharkEnergy = 6;
+        this.fishRepoRate = 7;
+        this.sharkEnergy = 10;
         this.fishes = 0;
         this.sharks = 0;
-        this.frameRate = 1;
+        this.frameRate = 0.5;
         this.inner = [];
         this.creatures = [];
         this.births = {
@@ -26,11 +26,11 @@ class World {
     }
 
     createFishAt(x, y) {
-        return new Fish(x, y, this);
+        return new Fish(x, y);
     }
 
     createSharkAt(x, y) {
-        return new Shark(x, y, this);
+        return new Shark(x, y, this.sharkEnergy);
     }
 
     init() {
@@ -71,10 +71,61 @@ class World {
         }
     }
 
+    getNorth(seaCreature) {
+        return {
+            x: seaCreature.x,
+            y: seaCreature.y - 1 < 0 ? this.maxY - 1 : seaCreature.y - 1,
+        };
+    }
+
+    getSouth(seaCreature) {
+        return {
+            x: seaCreature.x,
+            y: seaCreature.y + 1 > this.maxY - 1 ? 0 : seaCreature.y + 1,
+        };
+    }
+
+    getEast(seaCreature) {
+        return {
+            x: seaCreature.x + 1 > this.maxX - 1 ? 0 : seaCreature.x + 1,
+            y: seaCreature.y,
+        };
+    }
+
+    getWest(seaCreature) {
+        return {
+            x: seaCreature.x - 1 < 0 ? this.maxX - 1 : seaCreature.x - 1,
+            y: seaCreature.y,
+        };
+    }
+
+    getAdjacentSpaces(seaCreature) {
+        var adjacentSpaces = [];
+        adjacentSpaces.push(this.getNorth(seaCreature));
+        adjacentSpaces.push(this.getSouth(seaCreature));
+        adjacentSpaces.push(this.getEast(seaCreature));
+        adjacentSpaces.push(this.getWest(seaCreature));
+        return adjacentSpaces;
+    }
+
+    updatePosition(next, seaCreature) {
+        var space;
+        if( (space = this.inner[next.x][next.y]) != null){
+            console.log("Space not empty: Cannot move " + seaCreature.t + ", space contains a  " + space.t + "  [" + space.x + "," + space.y + "]");
+            return;
+        }
+        var oldX = seaCreature.x;
+        var oldY = seaCreature.y;
+        seaCreature.setX(next.x);
+        seaCreature.setY(next.y);
+        this.inner[oldX][oldY] = null;
+        this.inner[seaCreature.x][seaCreature.y] = seaCreature;
+    }
+
     remove(seaCreature) {
         var idx = this.creatures.indexOf(seaCreature);
-        this.inner[seaCreature.x][seaCreature.y] = null;
         this.creatures.splice(idx, 1);
+        this.inner[seaCreature.x][seaCreature.y] = null;
         if (seaCreature.getName() == 'fish') this.deaths.fish++;
         else this.deaths.shark++;
     }
@@ -101,39 +152,30 @@ class World {
             this.inner[cord.x] === undefined ||
             this.inner[cord.x][cord.y] === undefined
         )
-            throw Error('Outside of array bounds');
+            throw Error('Outside of array bounds [' + cord.x + ',' + cord.y + ']');
         return this.inner[cord.x][cord.y];
     }
 
+    kill(seaCreature){
+        world.dead.push(seaCreature);
+     //   this.inner[seaCreature.x][seaCreature.y] = null;
+    }
+
     go(callback) {
+        var c = 0;
         for (var i = 0; i < this.creatures.length; i++) {
-            //  console.log(this.creatures.length);
-            var oldX = this.creatures[i].x;
-            var oldY = this.creatures[i].y;
-            this.inner[oldX][oldY] = null;
-            this.creatures[i].move();
-            this.inner[this.creatures[i].x][
-                this.creatures[i].y
-            ] = this.creatures[i];
-            callback(
-                {
-                    x: oldX,
-                    y: oldY,
-                },
-                this.creatures[i]
-            );
-			//process the dead and born stacks
-            while (this.dead.length > 0) {
-                let creature = this.dead.pop();
-                this.remove(creature);
+            if(!this.creatures[i].alive){
+                this.remove(this.creatures[i]);
                 i--;
-            }
-            while (this.born.length > 0) {
+                continue;
+            } 
+            if(this.creatures[i].reproduce(this)){
                 let creature = this.born.pop();
                 if (this.add(creature)) i++;
             }
+            this.creatures[i].move(this);
+            callback(this.creatures[i]);
         }
     }
 }
-
 module.exports = World;

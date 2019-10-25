@@ -1,47 +1,50 @@
 const SeaCreature = require('./sea-creature');
 
 class Fish extends SeaCreature {
-    constructor(x, y, world) {
-        super(x, y, world, 'green');
+    constructor(x, y) {
+        super(x, y);
+
+        this.t = 'fish';
     }
 
     getColor(){
         return "green";
     }
 
-    getReproduceRate() {
-        return this.world.fishRepoRate;
+    getReproduceRate(world) {
+        return world.fishRepoRate;
     }
 
     getName() {
         return 'fish';
     }
 
-    tryReproduce() {
+    reproduce(world) {
         var me = this;
-        if (me.getAndIncrementMoveCount() > me.getReproduceRate()) {
-            this.world.born.push(this.world.createFishAt(this.x, this.y));
-            this.world.fishes++;
+        var potentialMoves = this.getPotentialMoves(world);
+        if(potentialMoves.length === 0)
+            return;
+        if (me.getAndIncrementMoveCount() > me.getReproduceRate(world)) {
+            world.born.push(world.createFishAt(this.x, this.y));
+            world.fishes++;
             me.moveCount = 0;
         }
     }
-    getPotentialMoves() {
-        var me = this;
-        var adjacentSpaces = this.getAdjacentSpaces();
+
+    getPotentialMoves(world) {
+        var adjacentSpaces = world.getAdjacentSpaces(this);
         return adjacentSpaces.filter(as => {
-            return me.world.get(as) == null;
+            return world.get(as) == null;
         });
     }
 
-    move() {
+    move(world) {
         var me = this;
-        var potentialMoves = this.getPotentialMoves();
+        var potentialMoves = this.getPotentialMoves(world);
         var nextMoveIndex = Math.floor(Math.random() * potentialMoves.length);
         var nextMove;
         if ((nextMove = potentialMoves[nextMoveIndex])) {
-            me.tryReproduce();
-            this.setX(nextMove.x);
-            this.setY(nextMove.y);
+            world.updatePosition(nextMove, me);
         }
     }
 }

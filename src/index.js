@@ -1,13 +1,14 @@
 import './experiment/v1/_custom.scss';
-import 'bootstrap';
+window.oid = 0;
+//import 'bootstrap';
 const World = require('./experiment/v1/world');
 var world = new World();
 window.world = world;
-world.maxX = 25;
-world.maxY = 20;
-world.sharks = 1;
-world.frameRate = 1;
-world.fishes = 400;
+world.maxX = 40;
+world.maxY = 40;
+world.sharks = 40;
+world.frameRate = 20;
+world.fishes = 1000;
 
 function createCanvas(parent, width, height) {
     var canvas = {};
@@ -37,11 +38,11 @@ function draw() {
     ctx.clearRect(0, 0, canvas.node.width, canvas.node.height); //clear canvas
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.node.width, canvas.node.height);
-    world.go(function(oldCoords, creature) {
+    world.go(function(creature) {
         var width = 1 * world.scale;
         var height = 1 * world.scale;
         ctx.beginPath();
-        ctx.strokeStyle = '#000'; 
+        ctx.strokeStyle = '#000';
         ctx.rect(
             creature.x * world.scale,
             creature.y * world.scale,
@@ -49,7 +50,6 @@ function draw() {
             height
         );
         ctx.stroke();
-
         ctx.fillStyle = creature.getColor();
         ctx.fillRect(
             creature.x * world.scale,
@@ -57,23 +57,24 @@ function draw() {
             width,
             height
         );
-//        circle(creature.getColor(), ctx, creature.x * world.scale, creature.y * world.scale, world.scale);
+    //    ctx.font = '11px Arial';
+      //  ctx.fillStyle = "white";
+        //ctx.fillText(creature.id + ':[' + creature.x + ',' + creature.y + ']', creature.x * world.scale + width / 3, creature.y * world.scale + height / 3); 
     });
 }
 
-function circle(color, context, centerX, centerY, radius){
+function circle(color, context, centerX, centerY, radius) {
     context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      context.fillStyle = color; 
-      context.fill();
-      context.lineWidth = 5;
-      context.strokeStyle = '#003300';
-      context.stroke();
+    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    context.fillStyle = color;
+    context.fill();
+    context.lineWidth = 5;
+    context.strokeStyle = '#003300';
+    context.stroke();
 }
 
 var container = document.getElementById('canvas');
 init(container);
-
 var interval = (function() {
     var interval = null,
         running = false;
@@ -86,6 +87,7 @@ var interval = (function() {
         stop: function() {
             if (!running) return;
             running = false;
+            console.log(world);
             clearInterval(interval);
         },
         restart: function() {
@@ -123,4 +125,5 @@ var interval2 = (function() {
 })();
 
 interval.start();
-interval2.start();
+//interval2.start();
+window.interval = interval;

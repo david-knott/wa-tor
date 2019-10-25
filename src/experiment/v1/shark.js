@@ -1,9 +1,9 @@
 const SeaCreature = require('./sea-creature');
-
 class Shark extends SeaCreature {
-    constructor(x, y, world) {
-        super(x, y, world, 'red');
-        this.energy = this.world.sharkEnergy;
+    constructor(x, y, energy) {
+        super(x, y);
+        this.energy = energy;
+        this.t = 'shark';
     }
 
     getColor() {
@@ -14,67 +14,69 @@ class Shark extends SeaCreature {
             }
             return hex;
         };
-        var blue = 255 - Math.floor(this.energy % 256);
-        var green = 255 - Math.floor(this.energy / 256 % 256);
-        var red = 255 - Math.floor(this.energy / 256 / 256 % 256);
+        var e = this.energy * 30;
+        console.log(e);
+        var blue = Math.floor(e % 256);
+        var green = Math.floor((e / 256) % 256);
+        var red = Math.floor((e / 256 / 256) % 256);
         var s = '#' + rgbToHex(red) + rgbToHex(green) + rgbToHex(blue);
         return s;
     }
 
-    getReproduceRate() {
-        return this.world.sharkRepoRate;
+    getReproduceRate(world) {
+        return world.sharkRepoRate;
     }
 
     getName() {
         return 'shark';
     }
 
-    getPotentialMoves() {
+    getPotentialMoves(world) {
         var me = this;
-        var adjacentSpaces = this.getAdjacentSpaces();
+        var adjacentSpaces = world.getAdjacentSpaces(this);
         var emptySpaces = adjacentSpaces.filter(as => {
-            return me.world.get(as) == null;
+            return world.get(as) == null;
         });
         var fishSpaces = adjacentSpaces.filter(as => {
-            return (
-                me.world.get(as) != null && me.world.get(as).getName() == 'fish'
-            );
+            return world.get(as) != null && world.get(as).getName() == 'fish';
         });
         var spaces = fishSpaces.length > 0 ? fishSpaces : emptySpaces;
         return spaces;
     }
 
-    eat(fish) {
-        this.world.dead.push(fish);
-        this.world.fishes--;
+    eat(world, fish) {
+        //world.kill(fish);
+        fish.alive = false;
+        world.fishes--;
         this.energy += 5;
     }
 
-    tryReproduce() {
+    reproduce(world) {
         var me = this;
-        if (me.getAndIncrementMoveCount() > me.getReproduceRate()) {
-            this.world.born.push(this.world.createSharkAt(this.x, this.y));
-            this.world.sharks++;
+        var potentialMoves = this.getPotentialMoves(world);
+        if(potentialMoves.length === 0)
+            return;
+        if (me.getAndIncrementMoveCount() > me.getReproduceRate(world)) {
+            world.born.push(world.createSharkAt(this.x, this.y));
+            world.sharks++;
             me.moveCount = 0;
         }
     }
 
-    move() {
+    move(world) {
         if (this.energy <= 0) {
-            this.world.dead.push(this);
-            this.world.sharks--;
+            this.alive = false;
+            world.sharks--;
             return;
         }
         this.energy--;
         var me = this;
-        var spaces = this.getPotentialMoves();
+        var spaces = this.getPotentialMoves(world);
         if (spaces.length > 0) {
             let next = spaces[Math.floor(Math.random() * spaces.length)];
-            me.tryReproduce();
-            let fish = this.world.get(next);
-            if (fish) this.eat(fish);
-            this.setX(next.x);
-            this.setY(next.y);
+            let fish = world.get(next);
+            if (fish) this.eat(world, fish);
+            world.updatePosition(next, me);
         }
     }
 }
