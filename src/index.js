@@ -2,13 +2,10 @@ import './experiment/v1/_custom.scss';
 window.oid = 0;
 //import 'bootstrap';
 const World = require('./experiment/v1/world');
-var world = new World();
+const Config = require('./experiment/v1/config');
+var config = new Config({});
+var world = new World(config);
 window.world = world;
-world.maxX = 40;
-world.maxY = 40;
-world.sharks = 40;
-world.frameRate = 20;
-world.fishes = 1000;
 
 function createCanvas(parent, width, height) {
     var canvas = {};
@@ -26,8 +23,8 @@ function init(container) {
     world.init();
     canvas = createCanvas(
         container,
-        world.maxX * world.scale,
-        world.maxY * world.scale
+        config.maxX * config.scale,
+        config.maxY * config.scale
     );
     ctx = canvas.context;
     ctx.fillStyle = '#000';
@@ -39,27 +36,27 @@ function draw() {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.node.width, canvas.node.height);
     world.go(function(creature) {
-        var width = 1 * world.scale;
-        var height = 1 * world.scale;
+        var width = 1 * config.scale;
+        var height = 1 * config.scale;
         ctx.beginPath();
         ctx.strokeStyle = '#000';
         ctx.rect(
-            creature.x * world.scale,
-            creature.y * world.scale,
+            creature.x * config.scale,
+            creature.y * config.scale,
             width,
             height
         );
         ctx.stroke();
         ctx.fillStyle = creature.getColor();
         ctx.fillRect(
-            creature.x * world.scale,
-            creature.y * world.scale,
+            creature.x * config.scale,
+            creature.y * config.scale,
             width,
             height
         );
-    //    ctx.font = '11px Arial';
-      //  ctx.fillStyle = "white";
-        //ctx.fillText(creature.id + ':[' + creature.x + ',' + creature.y + ']', creature.x * world.scale + width / 3, creature.y * world.scale + height / 3); 
+        //    ctx.font = '11px Arial';
+        //  ctx.fillStyle = "white";
+        //ctx.fillText(creature.id + ':[' + creature.x + ',' + creature.y + ']', creature.x * world.scale + width / 3, creature.y * world.scale + height / 3);
     });
 }
 
@@ -82,12 +79,11 @@ var interval = (function() {
         start: function() {
             if (running) return;
             running = true;
-            interval = setInterval(draw, 1000 / world.frameRate);
+            interval = setInterval(draw, 1000 / config.frameRate);
         },
         stop: function() {
             if (!running) return;
             running = false;
-            console.log(world);
             clearInterval(interval);
         },
         restart: function() {
@@ -112,8 +108,8 @@ var interval2 = (function() {
                     world.deaths.shark;
                 document.getElementById('deathFishes').innerHTML =
                     world.deaths.fish;
-                document.getElementById('fishes').innerHTML = world.fishes;
-                document.getElementById('sharks').innerHTML = world.sharks;
+                document.getElementById('fishes').innerHTML = config.fishes;
+                document.getElementById('sharks').innerHTML = config.sharks;
             }, 500);
         },
         stop: function() {

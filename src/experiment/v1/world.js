@@ -1,18 +1,11 @@
 const Shark = require('./shark');
 const Fish = require('./fish');
+const Config = require('./config');
 class World {
-    constructor() {
+    constructor(config) {
+        this.config = config;
         this.dead = [];
         this.born = [];
-        this.maxX = 0;
-        this.maxY = 0;
-        this.scale = 10;
-        this.sharkRepoRate = 15;
-        this.fishRepoRate = 7;
-        this.sharkEnergy = 10;
-        this.fishes = 0;
-        this.sharks = 0;
-        this.frameRate = 0.5;
         this.inner = [];
         this.creatures = [];
         this.births = {
@@ -30,19 +23,19 @@ class World {
     }
 
     createSharkAt(x, y) {
-        return new Shark(x, y, this.sharkEnergy);
+        return new Shark(x, y, this.config.sharkEnergy);
     }
 
     init() {
-        for (let i = 0; i < this.maxX; i++) {
+        for (let i = 0; i < this.config.maxX; i++) {
             this.inner[i] = [];
-            for (let j = 0; j < this.maxY; j++) {
+            for (let j = 0; j < this.config.maxY; j++) {
                 this.inner[i][j] = null;
             }
         }
-        for (let i = 0; i < this.fishes; i++) {
-            let x = Math.floor(Math.random() * this.maxX);
-            let y = Math.floor(Math.random() * this.maxY);
+        for (let i = 0; i < this.config.fishes; i++) {
+            let x = Math.floor(Math.random() * this.config.maxX);
+            let y = Math.floor(Math.random() * this.config.maxY);
             let f = this.createFishAt(x, y);
             let c = {
                 x: x,
@@ -55,9 +48,9 @@ class World {
             }
         }
 
-        for (let i = 0; i < this.sharks; i++) {
-            let x = Math.floor(Math.random() * this.maxX);
-            let y = Math.floor(Math.random() * this.maxY);
+        for (let i = 0; i < this.config.sharks; i++) {
+            let x = Math.floor(Math.random() * this.config.maxX);
+            let y = Math.floor(Math.random() * this.config.maxY);
             let f = this.createSharkAt(x, y);
             let c = {
                 x: x,
@@ -74,27 +67,27 @@ class World {
     getNorth(seaCreature) {
         return {
             x: seaCreature.x,
-            y: seaCreature.y - 1 < 0 ? this.maxY - 1 : seaCreature.y - 1,
+            y: seaCreature.y - 1 < 0 ? this.config.maxY - 1 : seaCreature.y - 1,
         };
     }
 
     getSouth(seaCreature) {
         return {
             x: seaCreature.x,
-            y: seaCreature.y + 1 > this.maxY - 1 ? 0 : seaCreature.y + 1,
+            y: seaCreature.y + 1 > this.config.maxY - 1 ? 0 : seaCreature.y + 1,
         };
     }
 
     getEast(seaCreature) {
         return {
-            x: seaCreature.x + 1 > this.maxX - 1 ? 0 : seaCreature.x + 1,
+            x: seaCreature.x + 1 > this.config.maxX - 1 ? 0 : seaCreature.x + 1,
             y: seaCreature.y,
         };
     }
 
     getWest(seaCreature) {
         return {
-            x: seaCreature.x - 1 < 0 ? this.maxX - 1 : seaCreature.x - 1,
+            x: seaCreature.x - 1 < 0 ? this.config.maxX - 1 : seaCreature.x - 1,
             y: seaCreature.y,
         };
     }
@@ -110,8 +103,19 @@ class World {
 
     updatePosition(next, seaCreature) {
         var space;
-        if( (space = this.inner[next.x][next.y]) != null){
-            console.log("Space not empty: Cannot move " + seaCreature.t + ", space contains a  " + space.t + "  [" + space.x + "," + space.y + "]");
+        if ((space = this.inner[next.x][next.y]) != null) {
+            /*
+            console.log(
+                'Space not empty: Cannot move ' +
+                    seaCreature.t +
+                    ', space contains a  ' +
+                    space.t +
+                    '  [' +
+                    space.x +
+                    ',' +
+                    space.y +
+                    ']'
+            );*/
             return;
         }
         var oldX = seaCreature.x;
@@ -126,8 +130,6 @@ class World {
         var idx = this.creatures.indexOf(seaCreature);
         this.creatures.splice(idx, 1);
         this.inner[seaCreature.x][seaCreature.y] = null;
-        if (seaCreature.getName() == 'fish') this.deaths.fish++;
-        else this.deaths.shark++;
     }
 
     spaceFilled(cord) {
@@ -135,13 +137,12 @@ class World {
     }
 
     add(seaCreature) {
-        if (this.creatures.length < this.maxX * this.maxY) {
-            if (this.spaceFilled({x: seaCreature.x, y: seaCreature.y}))
+        if (this.creatures.length < this.config.maxX * this.config.maxY) {
+            if (this.spaceFilled({x: seaCreature.x, y: seaCreature.y})) {
                 return false;
+            }
             this.creatures.push(seaCreature);
             this.inner[seaCreature.x][seaCreature.y] = seaCreature;
-            if (seaCreature.getName() == 'fish') this.births.fish++;
-            else this.births.shark++;
             return true;
         }
         return false;
@@ -152,29 +153,46 @@ class World {
             this.inner[cord.x] === undefined ||
             this.inner[cord.x][cord.y] === undefined
         )
-            throw Error('Outside of array bounds [' + cord.x + ',' + cord.y + ']');
+            throw Error(
+                'Outside of array bounds [' + cord.x + ',' + cord.y + ']'
+            );
         return this.inner[cord.x][cord.y];
-    }
-
-    kill(seaCreature){
-        world.dead.push(seaCreature);
-     //   this.inner[seaCreature.x][seaCreature.y] = null;
     }
 
     go(callback) {
         var c = 0;
         for (var i = 0; i < this.creatures.length; i++) {
-            if(!this.creatures[i].alive){
-                this.remove(this.creatures[i]);
-                i--;
-                continue;
-            } 
-            if(this.creatures[i].reproduce(this)){
-                let creature = this.born.pop();
-                if (this.add(creature)) i++;
+            let creature = this.creatures[i];
+            let result = creature.move(this);
+            //console.log(result.state);
+            switch (result.state) {
+                case 'NA':
+                    break;
+                case 'SHARK_DEAD':
+                    this.remove(result.thing);
+                    i++;
+                    break;
+                case 'FISH_DEAD':
+                //    var j = this.creatures.indexOf(result.thing);
+                  //  if(j < i) {
+                    //    i--;
+                  //  }
+                  //  this.remove(result.thing);
+                   // this.updatePosition(result.position, creature);
+                    break;
+                case 'MOVE':
+                    this.updatePosition(result.position, result.thing);
+                    break;
+                case 'BABY':
+                    this.updatePosition(result.position, creature);
+                    this.add(result.thing);
+                    i--;
+                    break;
             }
-            this.creatures[i].move(this);
-            callback(this.creatures[i]);
+            
+
+
+            callback(creature);
         }
     }
 }
