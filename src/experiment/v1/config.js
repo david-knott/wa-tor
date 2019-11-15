@@ -1,16 +1,16 @@
 class Config {
     constructor(options) {
         if (options) {
-            this.maxX = options.maxX | 160;
-            this.maxY = options.maxY | 120;
-            this.scale = options.scale| 10;
+            this.maxX = options.maxX | 16;
+            this.maxY = options.maxY | 12;
+            this.scale = options.scale| 50;
             this.sharkRepoRate = options.sharkRepoRate | 6;
-            this.fishRepoRate = options.fishRepoRate | 4;
-            this.sharkEnergy = options.sharkEnergy | 10;
-            this.fishEnergy = options.fishEnergy | 10;
-            this.fishes = options.fishes | 500;
-            this.sharks = options.sharks | 20;
-            this.frameRate = options.frameRate | 10;
+            this.fishRepoRate = options.fishRepoRate | 3;
+            this.sharkEnergy = options.sharkEnergy | 20;
+            this.fishEnergy = options.fishEnergy | 1;
+            this.fishes = options.fishes | 1;
+            this.sharks = options.sharks | 1;
+            this.frameRate = options.frameRate | 1;
         }
     }
 }

@@ -164,7 +164,6 @@ class World {
         for (var i = 0; i < this.creatures.length; i++) {
             let creature = this.creatures[i];
             let result = creature.move(this);
-            //console.log(result.state);
             switch (result.state) {
                 case 'NA':
                     break;
@@ -173,12 +172,12 @@ class World {
                     i++;
                     break;
                 case 'FISH_DEAD':
-                //    var j = this.creatures.indexOf(result.thing);
-                  //  if(j < i) {
-                    //    i--;
-                  //  }
-                  //  this.remove(result.thing);
-                   // this.updatePosition(result.position, creature);
+                    var j = this.creatures.indexOf(result.thing);
+                    if(j < i) {
+                        i--;
+                    }
+                    this.remove(result.thing);
+                    this.updatePosition(result.position, creature);
                     break;
                 case 'MOVE':
                     this.updatePosition(result.position, result.thing);
@@ -186,7 +185,6 @@ class World {
                 case 'BABY':
                     this.updatePosition(result.position, creature);
                     this.add(result.thing);
-                    i--;
                     break;
             }
             
