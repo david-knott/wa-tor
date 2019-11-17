@@ -102,20 +102,10 @@ class World {
     }
 
     updatePosition(next, seaCreature) {
-        var space;
+        let space;
+        if (next === undefined) throw Error('next undefined');
+        if (seaCreature === undefined) throw Error('sea creature undefined');
         if ((space = this.inner[next.x][next.y]) != null) {
-            /*
-            console.log(
-                'Space not empty: Cannot move ' +
-                    seaCreature.t +
-                    ', space contains a  ' +
-                    space.t +
-                    '  [' +
-                    space.x +
-                    ',' +
-                    space.y +
-                    ']'
-            );*/
             return;
         }
         var oldX = seaCreature.x;
@@ -160,36 +150,34 @@ class World {
     }
 
     go(callback) {
-        var c = 0;
-        for (var i = 0; i < this.creatures.length; i++) {
+        for (let i = 0; i < this.creatures.length; i++) {
             let creature = this.creatures[i];
-            let result = creature.move(this);
-            switch (result.state) {
-                case 'NA':
-                    break;
-                case 'SHARK_DEAD':
-                    this.remove(result.thing);
-                    i++;
-                    break;
-                case 'FISH_DEAD':
-                    var j = this.creatures.indexOf(result.thing);
-                    if(j < i) {
-                        i--;
+            let next = creature.getNextPosition();
+            if (next !== null) {
+                if (creature.isDead()) {
+                    this.remove(creature);
+                    i--;
+                } else {
+                    //if next position is a fish, it must be a shark moving to eat it
+                    let fish = this.get(next);
+                    if (fish != null) {
+                        var j = this.creatures.indexOf(fish);
+                        this.remove(fish);
+                        creature.energy += world.config.fishEnergy;
+                        if (j <= i) {
+                            i--;
+                        }
                     }
-                    this.remove(result.thing);
-                    this.updatePosition(result.position, creature);
-                    break;
-                case 'MOVE':
-                    this.updatePosition(result.position, result.thing);
-                    break;
-                case 'BABY':
-                    this.updatePosition(result.position, creature);
-                    this.add(result.thing);
-                    break;
+                    //is the animal reproducing ?
+                    let baby = creature.reproduce(this);
+                    //move animal to new space so baby can be placed in its old place
+                    this.updatePosition(next, creature);
+                    if (baby !== null) {
+                        this.add(baby);
+                    }
+                }
             }
-            
-
-
+            //draw the scene
             callback(creature);
         }
     }

@@ -7,6 +7,18 @@ class Fish extends SeaCreature {
     }
 
     getColor() {
+        var rgbToHex = function(rgb) {
+            var hex = Number(rgb).toString(16);
+            if (hex.length < 2) {
+                hex = '0' + hex;
+            }
+            return hex;
+        };
+        var e = this.energy * 10;
+        var blue = Math.floor(e % 256);
+        var green = 255; // Math.floor((e / 256) % 256);
+        var red = Math.floor((e / 256 / 256) % 256);
+        var s = '#' + rgbToHex(red) + rgbToHex(green) + rgbToHex(blue);
         return 'green';
     }
 
@@ -18,8 +30,8 @@ class Fish extends SeaCreature {
         return 'fish';
     }
 
-    getCopy(x, y) {
-        return new Fish(x, y);
+    getCopy(world) {
+        return new Fish(this.x, this.y);
     }
 }
 

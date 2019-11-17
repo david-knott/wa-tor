@@ -14,12 +14,12 @@ class Shark extends SeaCreature {
             }
             return hex;
         };
-        var e = this.energy * 30;
+        var e = this.energy;
         var blue = Math.floor(e % 256);
         var green = Math.floor((e / 256) % 256);
-        var red = Math.floor((e / 256 / 256) % 256);
+        var red = 255; //Math.floor((e / 256 / 256) % 256);
         var s = '#' + rgbToHex(red) + rgbToHex(green) + rgbToHex(blue);
-        return 'red';
+        return s;
     }
 
     getReproduceRate(world) {
@@ -30,36 +30,35 @@ class Shark extends SeaCreature {
         return 'shark';
     }
 
-    getCopy(x, y, world) {
-        return new Shark(x, y, 20);
+    getCopy(world) {
+        return new Shark(this.x, this.y, world.config.sharkEnergy);
     }
 
-    move(world) {
-        this.energy--;
-        //remove shark from world
-        if (this.energy <= 0) {
-            return {
-                state: 'SHARK_DEAD',
-                thing: this
-            };
-        }
+    getNextPosition() {
         var adjacentSpaces = world.getAdjacentSpaces(this);
         var fishSpaces = adjacentSpaces.filter(as => {
             return world.get(as) != null && world.get(as).getName() == 'fish';
         });
-        if (fishSpaces.length === 0) {
-            return super.move(world);
-        } else {
+        if (fishSpaces.length === 0) return super.getNextPosition();
+        else {
             let next =
                 fishSpaces[Math.floor(Math.random() * fishSpaces.length)];
-            let fish = world.get(next);
-            this.energy += world.config.fishEnergy;
-            return {
-                state: 'FISH_DEAD',
-                thing: fish,
-                position: next
-            };
+            return next;
         }
+    }
+
+    getMeal() {
+        let next = this.getNextPosition();
+        let fish = world.get(next);
+        return fish;
+    }
+
+    isDead() {
+        this.energy--;
+        if (this.energy <= 0) {
+            return true;
+        }
+        return false;
     }
 }
 
