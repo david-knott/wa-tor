@@ -2,7 +2,7 @@ import './experiment/v1/_custom.scss';
 window.oid = 0;
 //import 'bootstrap';
 const World = require('./experiment/v1/world');
-const Config = require('./experiment/v1/config').default;
+const Config = require('./experiment/v1/config');
 var config = new Config({});
 var world = new World(config);
 window.world = world;
