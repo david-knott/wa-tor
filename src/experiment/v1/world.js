@@ -1,6 +1,6 @@
 const Shark = require('./shark');
 const Fish = require('./fish');
-const Config = require('./config');
+const Config = require('./config').default;
 class World {
     constructor(config) {
         this.config = config;
