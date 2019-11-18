@@ -14,7 +14,7 @@ class Shark extends SeaCreature {
             }
             return hex;
         };
-        var e = this.energy;
+        var e = this.energy * 100;
         var blue = Math.floor(e % 256);
         var green = Math.floor((e / 256) % 256);
         var red = 255; //Math.floor((e / 256 / 256) % 256);
@@ -34,12 +34,12 @@ class Shark extends SeaCreature {
         return new Shark(this.x, this.y, world.config.sharkEnergy);
     }
 
-    getNextPosition() {
+    getNextPosition(world) {
         var adjacentSpaces = world.getAdjacentSpaces(this);
         var fishSpaces = adjacentSpaces.filter(as => {
             return world.get(as) != null && world.get(as).getName() == 'fish';
         });
-        if (fishSpaces.length === 0) return super.getNextPosition();
+        if (fishSpaces.length === 0) return super.getNextPosition(world);
         else {
             let next =
                 fishSpaces[Math.floor(Math.random() * fishSpaces.length)];
@@ -47,8 +47,8 @@ class Shark extends SeaCreature {
         }
     }
 
-    getMeal() {
-        let next = this.getNextPosition();
+    getMeal(world) {
+        let next = this.getNextPosition(world);
         let fish = world.get(next);
         return fish;
     }

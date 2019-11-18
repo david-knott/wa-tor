@@ -1,6 +1,6 @@
 const Shark = require('./shark');
 const Fish = require('./fish');
-const Config = require('./config').default;
+const Config = require('./config');
 class World {
     constructor(config) {
         this.config = config;
@@ -152,7 +152,7 @@ class World {
     go(callback) {
         for (let i = 0; i < this.creatures.length; i++) {
             let creature = this.creatures[i];
-            let next = creature.getNextPosition();
+            let next = creature.getNextPosition(this);
             if (next !== null) {
                 if (creature.isDead()) {
                     this.remove(creature);

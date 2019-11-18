@@ -9,7 +9,7 @@ class Config {
             this.sharkEnergy = options.sharkEnergy | 4;
             this.fishEnergy = options.fishEnergy | 2;
             this.fishes = options.fishes | 150;
-            this.sharks = options.sharks | 50 ;
+            this.sharks = options.sharks | 800 ;
             this.frameRate = options.frameRate | 10;
         }
     }

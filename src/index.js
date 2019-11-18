@@ -53,24 +53,27 @@ function draw() {
         var width = 1 * config.scale;
         var height = 1 * config.scale;
         ctx.beginPath();
-        /*
+        
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 4;
+        /*
         ctx.rect(
             creature.x * config.scale,
             creature.y * config.scale,
             width,
             height
         );
+        
         */
         ctx.stroke();
         ctx.fillStyle = creature.getColor();
         ctx.fillRect(
-            creature.x * config.scale,
-            creature.y * config.scale,
-            width,
-            height
+            creature.x * config.scale ,
+            creature.y * config.scale ,
+            width - 2,
+            height - 2
         );
+        
         //    ctx.font = '11px Arial';
         //  ctx.fillStyle = "white";
         //ctx.fillText(creature.id + ':[' + creature.x + ',' + creature.y + ']', creature.x * world.scale + width / 3, creature.y * world.scale + height / 3);

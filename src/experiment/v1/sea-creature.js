@@ -42,7 +42,7 @@ class SeaCreature {
         return null;
     }
 
-    getNextPosition() {
+    getNextPosition(world) {
         var adjacentSpaces = world.getAdjacentSpaces(this);
         var spaces = adjacentSpaces.filter(as => {
             return world.get(as) == null;
