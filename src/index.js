@@ -20,6 +20,20 @@ var canvas;
 var ctx;
 
 function init(container) {
+    var w = Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0
+    );
+    var h = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0
+    );
+
+    //let width = document.getElementById('canvas-wrapper').offsetWidth;
+   // let scale = width / config.maxX;
+  //  let maxY = h / scale;
+   // config.scale = Math.round(scale);
+  //  config.maxY = Math.round(maxY) - 30;
     world.init();
     canvas = createCanvas(
         container,
@@ -39,13 +53,16 @@ function draw() {
         var width = 1 * config.scale;
         var height = 1 * config.scale;
         ctx.beginPath();
+        /*
         ctx.strokeStyle = '#000';
+        ctx.lineWidth = 4;
         ctx.rect(
             creature.x * config.scale,
             creature.y * config.scale,
             width,
             height
         );
+        */
         ctx.stroke();
         ctx.fillStyle = creature.getColor();
         ctx.fillRect(
@@ -71,6 +88,7 @@ function circle(color, context, centerX, centerY, radius) {
 }
 
 var container = document.getElementById('canvas');
+
 init(container);
 var interval = (function() {
     var interval = null,
@@ -92,34 +110,5 @@ var interval = (function() {
     };
 })();
 
-var interval2 = (function() {
-    var interval = null,
-        running = false;
-    return {
-        start: function() {
-            if (running) return;
-            running = true;
-            interval = setInterval(function() {
-                document.getElementById('birthSharks').innerHTML =
-                    world.births.shark;
-                document.getElementById('birthFishes').innerHTML =
-                    world.births.fish;
-                document.getElementById('deathSharks').innerHTML =
-                    world.deaths.shark;
-                document.getElementById('deathFishes').innerHTML =
-                    world.deaths.fish;
-                document.getElementById('fishes').innerHTML = config.fishes;
-                document.getElementById('sharks').innerHTML = config.sharks;
-            }, 500);
-        },
-        stop: function() {
-            if (!running) return;
-            running = false;
-            clearInterval(interval);
-        },
-    };
-})();
-
 interval.start();
-//interval2.start();
 window.interval = interval;
