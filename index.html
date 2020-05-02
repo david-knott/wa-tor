@@ -11,12 +11,85 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div id="canvas-wrapper">
-                                <div id="canvas"><br /></div>
-                            </div>
+                    <div id="canvas-wrapper">
+                        <div id="canvas"><br /></div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group row">
+                        <div class="slidecontainer">
+                            <label for="framePerSecond">Speed</label>
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value="50"
+                                class="slider"
+                                id="myRange"
+                            />
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="slidecontainer">
+                            <label for="sharkRepoRate">Shark Repo Rate</label>
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value="50"
+                                class="slider"
+                                id="sharkRepoRate"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="slidecontainer">
+                            <label for="fishRepoRate">Fish Repo Rate</label>
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value="50"
+                                class="slider"
+                                id="fishRepoRate"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="slidecontainer">
+                            <label for="fishFoodValue">Fish Food Value</label>
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value="50"
+                                class="slider"
+                                id="fishFoodValue"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="slidecontainer">
+                            <label for="sharinitenergy"
+                                >shark initial energy</label
+                            >
+                            <input
+                                type="range"
+                                min="1"
+                                max="100"
+                                value="50"
+                                class="slider"
+                                id="sharinitenergy"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <input type="button" value="Pause" />
+                        <input type="button" value="Clear" />
+                        <input type="button" value="Add Shark / Fish" />
                     </div>
                 </div>
             </div>
