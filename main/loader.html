@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title><%= htmlWebpackPlugin.options.title %></title>
+    </head>
+    <body>
+        <div id="wator-widget"></div>
+
+        <script>
+            (function (doc, tag, id) {
+                var js = doc.getElementsByTagName(tag)[0];
+                if (doc.getElementById(id)) {
+                    return;
+                }
+                js = doc.createElement(tag);
+                js.id = id;
+                js.src = "./js/widget.js";
+                js.type = "text/javascript";
+                doc.body.appendChild(js);
+            })(document, "script", "wator-application");
+            window.onload = function () {
+                //WatorWidget.setOptions({
+                //});
+                WatorWidget.render();
+            };
+        </script>
+    </body>
+</html>

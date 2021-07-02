@@ -91,7 +91,7 @@ class Engine {
      * new bit packed number.
      */
     incrementRepoTime(e) {
-        const repo = ((e >> 12) & 255) + 1;
+        let repo = ((e >> 12) & 255) + 1;
         if(repo > 255) {
             repo = 255;
         }
@@ -173,6 +173,7 @@ class Engine {
     }
 
     sharkStrategy(i, j, arr) {
+
         let free = [];
         const fishes = (posFun, arr, free) => {
             const pos = posFun(i, j, arr);
@@ -193,7 +194,7 @@ class Engine {
         free = [];
         const add = (posFun, arr, free) => {
             const pos = posFun(i, j, arr);
-            if (arr[pos.i][pos.j] === 0 || this.isFish(arr[pos.i][pos.j])) {
+            if (arr[pos.i][pos.j] === 0) {
                 free.push({
                     i: pos.i,
                     j: pos.j,
@@ -213,11 +214,15 @@ class Engine {
     /**
      * Update dst array based on information in src array.
      */
-    update(dstArray, fishStrategy, sharkStrategy) {
+    update(dstArray, srcArray, renderer, fishStrategy, sharkStrategy) {
         fishStrategy = fishStrategy || this.fishStrategy;
         sharkStrategy = sharkStrategy || this.sharkStrategy;
         for (let i = 0; i < dstArray.length; ++i) {
             for (let j = 0; j < dstArray[i].length; ++j) {
+
+                // render the source array.
+                renderer(srcArray, i, j);
+
                 let animal = dstArray[i][j];
                 // is item at ( i, j )  a fish or a shark ?
                 if (this.isFish(animal)) {
@@ -228,7 +233,7 @@ class Engine {
                     // fish reproduces, moves to new square and
                     // leaves offspring in old position.
                     if (i !== tup.i || j !== tup.j) {
-                        if (this.repoTime(animal) == this.config.fishRepoTime) {
+                        if (this.repoTime(animal) > this.config.fishRepoTime) {
                             dstArray[i][j] = this.newFish();
                             animal = this.zeroRepoTime(animal);
                         } else {
@@ -242,6 +247,7 @@ class Engine {
                 if (this.isShark(animal)) {
                     // if shark, at each chronon decrement energy by 1
                     animal = this.decrementEnergy(animal);
+                    
                     animal = this.incrementRepoTime(animal);
 
                     const tup = this.sharkStrategy.apply(this, [
@@ -258,7 +264,7 @@ class Engine {
                     // if shark can move and it has survied for x chronons, shark reproduces
                     if (i !== tup.i || j !== tup.j) {
                         if (
-                            this.repoTime(animal) === this.config.sharkRepoTime
+                            this.repoTime(animal) > this.config.sharkRepoTime
                         ) {
                             dstArray[i][j] = this.newShark();
                             animal = this.zeroRepoTime(animal);
@@ -282,13 +288,13 @@ class Engine {
     /**
      * Update and render data
      */
-    loop(renderer) {
+    loop() {
         // render data
-        renderer(this.readArray);
+     //   renderer(this.readArray);
 
         // copy current to next.
         this.writeArray = JSON.parse(JSON.stringify(this.readArray));
-        this.update(this.writeArray);
+        this.update(this.writeArray, this.readArray, this.config.renderer);
 
         // swap arrays.
         this.readArray = this.writeArray;

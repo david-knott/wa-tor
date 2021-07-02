@@ -5,63 +5,81 @@
         <title><%= htmlWebpackPlugin.options.title %></title>
     </head>
     <body>
-        <h1>Wa-tor</h1>
-        <canvas
-            id="myCanvas"
-            width="400"
-            height="600"
-            style="border: 1px solid #000000"
-        >
-        </canvas>
-        <div class="buttoncontainer">
-            <button id="addSharks">Add Sharks</button>
-        </div>
-        <div class="buttoncontainer">
-            <button id="addFishes">Add Fishes</button>
-        </div>
-        <div class="slidecontainer">
-            <label>Shark Reproductive Time</label>
-            <input
-                type="range"
-                min="1"
-                max="255"
-                value="20"
-                class="slider"
-                id="sharkReproductiveRate"
-            />
-        </div>
-        <div class="slidecontainer">
-            <label>Fish Reproductive Time</label>
-            <input
-                type="range"
-                min="1"
-                max="255"
-                value="5"
-                class="slider"
-                id="fishReproductiveRate"
-            />
-        </div>
-        <div class="slidecontainer">
-            <label>New Shark Energy</label>
-            <input
-                type="range"
-                min="1"
-                max="100"
-                value="10"
-                class="slider"
-                id="sharkInitialEnergy"
-            />
-        </div>
-        <div class="slidecontainer">
-            <label>Fish Food Value</label>
-            <input
-                type="range"
-                min="1"
-                max="100"
-                value="2"
-                class="slider"
-                id="fishEnergyValue"
-            />
+        <div class="wator-container">
+            <h1>Wa-tor</h1>
+            <canvas
+                id="myCanvas"
+                width="400"
+                height="600"
+                style="border: 1px solid #000000"
+            >
+            </canvas>
+            <div class="buttoncontainer">
+                <button id="addSharks">Add Sharks</button>
+            </div>
+            <div class="buttoncontainer">
+                <button id="addFishes">Add Fishes</button>
+            </div>
+            <div class="slidecontainer">
+                <label>Shark Reproductive Time</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="255"
+                    value="20"
+                    class="slider"
+                    id="sharkReproductiveRate"
+                />
+                <output>24</output>
+            </div>
+            <div class="slidecontainer">
+                <label>Fish Reproductive Time</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="255"
+                    value="5"
+                    class="slider"
+                    id="fishReproductiveRate"
+                />
+                <output>24</output>
+            </div>
+            <div class="slidecontainer">
+                <label>New Shark Energy</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="100"
+                    value="5"
+                    class="slider"
+                    id="sharkInitialEnergy"
+                />
+                <output>24</output>
+            </div>
+            <div class="slidecontainer">
+                <label>Fish Food Value</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="100"
+                    value="2"
+                    class="slider"
+                    id="fishEnergyValue"
+                />
+                <output>24</output>
+            </div>
+            <div class="slidecontainer">
+                <label>Fps</label>
+                <input
+                    type="range"
+                    min="1"
+                    max="100"
+                    value="2"
+                    class="slider"
+                    id="fps"
+                />
+                <output>24</output>
+            </div>
         </div>
     </body>
 </html>
